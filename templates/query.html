@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query Documents</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .query-form {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .query-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .document-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: white;
+        }
+        
+        .document-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .document-item:last-child {
+            border-bottom: none;
+        }
+        
+        .submit-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-box {
+            background-color: #e7f3fe;
+            border-left: 5px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-title {
+            color: #0b7dda;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <a href="/" class="btn">Upload Documents</a>
+        <a href="/documents" class="btn">Document Library</a>
+    </div>
+    
+    <h1>Query Documents</h1>
+    
+    <div class="info-box">
+        <h3 class="info-title">How to Use</h3>
+        <p>Enter your question in the query box and select the documents you want to search. The system will:</p>
+        <ol>
+            <li>Find relevant information in each selected document</li>
+            <li>Identify common themes across the documents</li>
+            <li>Provide a synthesized answer that incorporates information from all selected documents</li>
+        </ol>
+        <p>For best results, ask specific questions and select multiple related documents.</p>
+    </div>
+    
+    <div class="query-form">
+        <form action="/query" method="POST">
+            <div class="form-group">
+                <label for="query" class="form-label">Enter your question:</label>
+                <input type="text" id="query" name="query" class="query-input" placeholder="e.g., What are the main findings in these documents?" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Select documents to query:</label>
+                <div class="document-list">
+                    {% if documents %}
+                        {% for doc in documents %}
+                            <div class="document-item">
+                                <input type="checkbox" id="doc_{{ doc.id }}" name="document_ids" value="{{ doc.id }}" {% if request.args.get('preselect') == doc.id %}checked{% endif %}>
+                                <label for="doc_{{ doc.id }}">{{ doc.filename }}</label>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No processed documents available. Please upload and process documents first.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button type="submit" class="submit-btn">Submit Query</button>
+                <div>
+                    <button type="button" id="select-all" class="btn">Select All</button>
+                    <button type="button" id="deselect-all" class="btn">Deselect All</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // Select/Deselect All functionality
+        document.getElementById('select-all').addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('input[name="document_ids"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = true;
+            });
+        });
+        
+        document.getElementById('deselect-all').addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('input[name="document_ids"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+        });
+    </script>
+</body>
+</html>

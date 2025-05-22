@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2 {
+            color: #333;
+        }
+        
+        .document-details {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .document-content {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+            background-color: white;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 150px;
+        }
+        
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .status-processing {
+            color: blue;
+            font-weight: bold;
+        }
+        
+        .status-queued {
+            color: orange;
+            font-weight: bold;
+        }
+        
+        .status-error {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chunk-marker {
+            background-color: #f0f7ff;
+            padding: 3px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div>
+            <a href="/documents" class="btn">Back to Library</a>
+            <a href="/query" class="btn">Query Documents</a>
+        </div>
+        <a href="/" class="btn">Upload Documents</a>
+    </div>
+    
+    <h1>Document Details</h1>
+    
+    <div class="document-details">
+        <h2>{{ document.filename if document.filename else 'Document ' + document.id }}</h2>
+        
+        <div class="detail-item">
+            <span class="detail-label">Status:</span>
+            {% if 'completed' in document.status %}
+                <span class="status-completed">Completed</span>
+            {% elif 'processing' in document.status %}
+                <span class="status-processing">Processing</span>
+            {% elif 'queued' in document.status %}
+                <span class="status-queued">Queued</span>
+            {% else %}
+                <span class="status-error">{{ document.status }}</span>
+            {% endif %}
+        </div>
+        
+        <div class="detail-item">
+            <span class="detail-label">Document ID:</span> {{ document.id }}
+        </div>
+        
+        {% if document.processed_time %}
+            <div class="detail-item">
+                <span class="detail-label">Processed Time:</span> {{ document.processed_time }}
+            </div>
+        {% endif %}
+        
+        {% if document.chunks %}
+            <div class="detail-item">
+                <span class="detail-label">Document Chunks:</span> {{ document.chunks }}
+            </div>
+        {% endif %}
+        
+        {% if document.file_type %}
+            <div class="detail-item">
+                <span class="detail-label">File Type:</span> {{ document.file_type }}
+            </div>
+        {% endif %}
+        
+        {% if 'ocr_used' in document %}
+            <div class="detail-item">
+                <span class="detail-label">OCR Used:</span> {{ "Yes" if document.ocr_used else "No" }}
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if content %}
+        <div class="content-header">
+            <h2>Document Content</h2>
+            <div>
+                <a href="/query?preselect={{ document.id }}" class="btn">Query This Document</a>
+            </div>
+        </div>
+        <div class="document-content">{{ content | replace("--- Document Chunk", "<span class='chunk-marker'>--- Document Chunk") | replace("---", "</span>---") | safe }}</div>
+    {% else %}
+        {% if 'completed' in document.status %}
+            <div class="document-content">
+                <p>No content available for this document.</p>
+            </div>
+        {% elif 'processing' in document.status %}
+            <div class="document-content">
+                <p>Document is currently being processed. Please check back later.</p>
+            </div>
+        {% elif 'queued' in document.status %}
+            <div class="document-content">
+                <p>Document is queued for processing. Please check back later.</p>
+            </div>
+        {% else %}
+            <div class="document-content">
+                <p>Document processing failed. Please check the error message and try again.</p>
+            </div>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

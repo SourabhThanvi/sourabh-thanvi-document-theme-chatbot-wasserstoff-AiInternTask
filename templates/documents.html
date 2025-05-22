@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Library</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .document-list {
+            margin-top: 20px;
+        }
+        
+        .document-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .document-item h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .document-info {
+            margin: 10px 0;
+            color: #555;
+        }
+        
+        .document-info span {
+            margin-right: 15px;
+        }
+        
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .status-processing {
+            color: blue;
+            font-weight: bold;
+        }
+        
+        .status-queued {
+            color: orange;
+            font-weight: bold;
+        }
+        
+        .status-error {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .actions {
+            margin-top: 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <a href="/" class="btn">Upload Documents</a>
+        <a href="/query" class="btn">Query Documents</a>
+    </div>
+    
+    <h1>Document Library</h1>
+    
+    <div class="document-list">
+        {% if documents %}
+            {% for doc in documents %}
+                <div class="document-item">
+                    <h3>{{ doc.filename if doc.filename else 'Document ' + doc.id }}</h3>
+                    
+                    <div class="document-info">
+                        <span>
+                            Status: 
+                            {% if 'completed' in doc.status %}
+                                <span class="status-completed">Completed</span>
+                            {% elif 'processing' in doc.status %}
+                                <span class="status-processing">Processing</span>
+                            {% elif 'queued' in doc.status %}
+                                <span class="status-queued">Queued</span>
+                            {% else %}
+                                <span class="status-error">{{ doc.status }}</span>
+                            {% endif %}
+                        </span>
+                        
+                        {% if 'processed_time' in doc %}
+                            <span>Processed: {{ doc.processed_time }}</span>
+                        {% endif %}
+                        
+                        {% if 'chunks' in doc %}
+                            <span>Chunks: {{ doc.chunks }}</span>
+                        {% endif %}
+                        
+                        {% if 'ocr_used' in doc %}
+                            <span>OCR Used: {{ "Yes" if doc.ocr_used else "No" }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="actions">
+                        <a href="/documents/{{ doc.id }}" class="btn">View Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-message">
+                <p>No documents have been uploaded yet.</p>
+                <a href="/" class="btn">Upload Documents</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

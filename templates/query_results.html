@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query Results and Themes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: #333;
+        }
+        
+        .query-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .synthesis-section {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .themes-section {
+            margin-bottom: 30px;
+        }
+        
+        .theme-item {
+            background-color: #e8f5e9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2E7D32;
+        }
+        
+        .theme-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #2E7D32;
+        }
+        
+        .theme-description {
+            margin-bottom: 10px;
+        }
+        
+        .supporting-docs {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        .citations {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 5px;
+        }
+        
+        .individual-results {
+            margin-top: 30px;
+        }
+        
+        .result-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .document-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .answer {
+            margin-bottom: 10px;
+            white-space: pre-line;
+        }
+        
+        .citation {
+            font-style: italic;
+            color: #666;
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <a href="/query" class="btn">New Query</a>
+        <a href="/documents" class="btn">Document Library</a>
+    </div>
+    
+    <div class="query-section">
+        <h1>Query Results and Theme Analysis</h1>
+        <h2>Query: "{{ query }}"</h2>
+    </div>
+    
+    <!-- Synthesized Answer Section -->
+    <div class="synthesis-section">
+        <h2>Synthesized Answer</h2>
+        <div class="synthesized-answer">{{ synthesized_answer }}</div>
+    </div>
+    
+    <!-- Identified Themes Section -->
+    <div class="themes-section">
+        <h2>Identified Themes</h2>
+        
+        {% if themes %}
+            {% for theme in themes %}
+                <div class="theme-item">
+                    <div class="theme-name">{{ theme.name }}</div>
+                    <div class="theme-description">{{ theme.description }}</div>
+                    
+                    {% if theme.supporting_documents %}
+                        <div class="supporting-docs">
+                            Supporting documents: 
+                            {% for doc_id in theme.supporting_documents %}
+                                {% for result in results %}
+                                    {% if result.doc_id == doc_id %}
+                                        {{ result.filename }}{% if not loop.last %}, {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    {% if theme.citations %}
+                        <div class="citations">
+                            Citations: {{ theme.citations|join('; ') }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No common themes were identified across the documents.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Individual Document Results Section -->
+    <div class="individual-results">
+        <h2>Individual Document Responses</h2>
+        
+        {% if results %}
+            {% for result in results %}
+                <div class="result-item">
+                    <div class="document-title">{{ result.filename }}</div>
+                    <div class="answer">{{ result.answer }}</div>
+                    <div class="citation">Citation: {{ result.citation }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No results found. Try a different query or select more documents.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+│   ├── documents.html
+│   ├── document_view.html
+│   ├── query.html
