@@ -199,15 +199,11 @@ document-theme-chatbot/
    - Verify API key in `.env` file
    - Check API quota and billing
 
-2. **OCR Issues**:
-   - Ensure Tesseract is installed
-   - Check image quality and format
-
-3. **Memory Errors**:
+2. **Memory Errors**:
    - Reduce batch size for large documents
    - Increase system RAM
 
-4. **Vector Database Errors**:
+3. **Vector Database Errors**:
    - Ensure FAISS is properly installed
    - Check disk space for vector storage
 
@@ -225,7 +221,6 @@ FLASK_DEBUG=1 python app.py
 1. Upload a few test documents
 2. Wait for processing completion
 3. Try various queries to test functionality
-4. Check logs for any errors
 
 
 ## 🚀 Deployment
