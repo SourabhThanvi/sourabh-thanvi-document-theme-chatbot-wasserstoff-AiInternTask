@@ -2,6 +2,25 @@
 
 An AI-powered document processing system that can analyze large sets of documents, identify common themes, and provide detailed, cited responses to user queries. Built as part of the Wasserstoff AI Internship program.
 
+## Demo Overview & Performance
+
+
+https://github.com/user-attachments/assets/20bddc37-fcfe-4c4b-a747-6c49a9850440
+
+
+This demonstration showcases the complete functionality of the Document Research & Theme Identification Chatbot, including document upload, processing, query execution, and theme synthesis capabilities.
+
+**Processing Time:** The demonstration shows the complete workflow taking approximately 5 minutes to execute. This processing time is primarily due to:
+
+- Large document file sizes requiring extensive text extraction and processing
+- Vector store creation and indexing of multiple documents for semantic search
+- Embedding generation and database storage optimization
+- Initial model loading and system initialization
+
+The one-time setup ensures optimal performance for subsequent queries and enables fast, accurate theme identification across the entire document corpus.
+
+The system demonstrates production-ready capabilities suitable for research, legal document analysis, and enterprise knowledge management applications.
+
 ## 🚀 Features
 
 - **Multi-Document Processing**: Upload and process 75+ documents in PDF and image formats
