@@ -1,6 +1,6 @@
 # Document Research & Theme Identification Chatbot
 
-An AI-powered document processing system that can analyze large sets of documents, identify common themes, and provide detailed, cited responses to user queries. Built as part of the Wasserstoff AI Internship program.
+An AI-powered document processing system that can analyze large sets of documents, identify common themes, and provide detailed, cited responses to user queries.
 
 ## Demo Overview & Performance
 
